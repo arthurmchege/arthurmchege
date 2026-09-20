@@ -1,127 +1,83 @@
 # Arthur Mulunda
 
-Software engineer based in Nairobi, Kenya. Third-year Computer Science student at The Kiambu Institute of Science and Technology, building production-grade systems and developing a strong bias toward backend engineering and system architecture.
+Software engineer in Nairobi, Kenya. Third-year Computer Science diploma student at The Kiambu National Polytechnic, graduating November 2026. I'm aiming for backend and AI engineering roles.
 
-I care about understanding how systems work before writing code — schema design, data flow, failure handling — not just making things run.
-
----
-
-## What I'm Building
-
-### FlowX
-
-![Node.js](https://img.shields.io/badge/Backend-Node.js_%2B_TypeScript-339933?style=flat-square)
-![Next.js](https://img.shields.io/badge/Frontend-Next.js_14-black?style=flat-square)
-![BullMQ](https://img.shields.io/badge/Queue-BullMQ_%2B_Redis-DC382D?style=flat-square)
-![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_16-336791?style=flat-square)
-![Claude](https://img.shields.io/badge/AI-Anthropic_Claude_API-D97757?style=flat-square)
-![Status](https://img.shields.io/badge/Status-In_Development-orange?style=flat-square)
-
-> Real-time data pipeline orchestrator for small engineering teams — from drag-and-drop pipeline design to live execution monitoring and AI-powered failure diagnosis.
-
-**The problem:** Small data teams run on unsupervised cron jobs. Scripts fail silently, retries don't happen, dependencies go undocumented, and the first sign of trouble is often a broken dashboard days later. Tools like Airflow, Prefect, and Dagster solve this for teams with dedicated DevOps — not for a 3-person startup data team.
-
-**The solution:** FlowX is a visual pipeline builder where steps are nodes on a drag-and-drop canvas, execution runs as background jobs with automatic retries, and every step's status streams live to the UI as it happens. On failure, an AI assistant reads the failure context and explains what broke and how to fix it, in plain English.
-
-**System components**
-
-| Component | Role | What it does |
-|---|---|---|
-| **Pipeline Canvas** | Visual editor | Xyflow-based drag-and-drop DAG builder — define steps and dependencies without writing code |
-| **API Server** | Core backend | Express + TypeScript REST API — pipeline CRUD, run triggers, auth |
-| **Job Queue & Workers** | Execution engine | BullMQ + Redis — topological execution order, retries with exponential backoff, dead-letter handling |
-| **Real-Time Layer** | Live monitoring | WebSocket server + Redis pub/sub — step status pushed to the canvas within milliseconds |
-| **AI Debug Assistant** | Failure diagnosis | Claude API reads step config, error, and run history — returns a plain-English diagnosis and fix |
-
-**Tech stack:** Node.js · Express · TypeScript (strict) · BullMQ · Redis · WebSockets (`ws`) · PostgreSQL 16 · Next.js 14 (App Router) · Tailwind CSS · Xyflow · Auth.js (GitHub OAuth) + JWT · Anthropic Claude API · Docker Compose · GitHub Actions → Railway + Vercel
-
-```
-Pipeline Canvas (Xyflow) → API Server (Express) → BullMQ (Redis-backed)
-                                  ↓                        ↓
-                          PostgreSQL              Worker Pool (executes steps)
-                                  ↑                        ↓
-                       WebSocket Server  ←——  Redis Pub/Sub
-                                  ↓
-                          Live Run Monitor
-                                  ↓ (on failure)
-                          AI Debug Assistant (Claude API)
-```
-
-**Status:** 🚧 In active development — Phase 1 of 9. Infrastructure (Docker, PostgreSQL, Redis, monorepo) is live; TypeScript foundations underway. Built in public, one phase at a time — [follow the build →](https://github.com/Arthur040424/flowx)
+I like to understand how a system works before I write code: schema design, data flow, and what happens when something fails.
 
 ---
 
-### AttachIQ
+## Projects
 
-![Python](https://img.shields.io/badge/Python-FastAPI-009688?style=flat-square)
-![Next.js](https://img.shields.io/badge/Frontend-Next.js_15-black?style=flat-square)
-![Google ADK](https://img.shields.io/badge/AI-Google_ADK_%2B_Gemini-4285F4?style=flat-square)
-![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791?style=flat-square)
-![Status](https://img.shields.io/badge/Status-In_Development-orange?style=flat-square)
+### Job Card System (completed)
 
-> AI-agent-powered platform for managing TVET industrial attachment assessment in Kenya — from placement to competency sign-off.
+A full-stack field service management platform, built solo during my internship at Copycat Group to replace paper-based job tracking for technician dispatch.
 
-**The problem:** Kenya's 700+ TVET colleges require every student to complete a 3-month industrial attachment under the CBET curriculum. Assessment runs on paper logbooks that supervisors don't understand and students fill in retrospectively — coordinators only see issues once the student is back. Students graduate with paper qualifications that don't reflect real competency.
+- Job lifecycle from assignment to completion, with priorities, completion reports, customer signature capture, and PDF reports
+- Role-based access for supervisors and technicians, with JWT in HTTP-only cookies
+- Payments through M-Pesa STK Push (Daraja API) and Paystack hosted checkout, with payment status tracked per job
+- Email notifications and customer invoices with payment links (Nodemailer)
+- Separate Python/FastAPI monitoring service that streams Docker container health, host CPU, memory and disk, backend response times, and an activity feed over WebSockets
+- I learned Python by building that monitoring service
 
-**The solution:** AttachIQ replaces the paper workflow with a multi-tenant web platform and four AI agents that guide every stakeholder in real time, covering the full lifecycle: placement → evidence collection → competency assessment → coordinator monitoring → compliance reporting.
+**Stack:** React, Vite, Tailwind CSS, Node.js, Express, PostgreSQL, Python, FastAPI, Docker, Nginx
+**Repo:** [JobCardSystem](https://github.com/Arthur040419/JobCardSystem)
 
-**AI agents**
+### Nexus (completed)
 
-| Agent | Role | What it does |
-|---|---|---|
-| **StudentIQ** | Student coach | Tracks competency gaps, guides evidence submission, drafts messages to supervisors |
-| **SupervisorIQ** | Supervisor guide | Walks non-educator supervisors through CBET assessment conversationally — no rubrics, no jargon |
-| **CoordIQ** | Coordinator intelligence | Surfaces at-risk students, flags coverage gaps, generates batch reports on demand |
-| **AttachIQ Core** | Orchestrator | Routes incoming requests and coordinates cross-agent workflows |
+An uptime and health monitoring platform. I built it because my own projects kept crashing and I only found out after the fact.
 
-**Tech stack:** Next.js 15 (App Router) · TypeScript · shadcn/ui · Python FastAPI · Pydantic v2 · SQLAlchemy 2.0 (async) · Google Agent Development Kit (ADK) · Gemini 2.0 Flash · PostgreSQL 16 (16-table, multi-tenant schema) · Cloudinary · JWT (access + refresh rotation) · Vercel + Google Cloud Run + Railway · GitHub Actions → Docker → Cloud Run
+- Scheduler claims due monitors with PostgreSQL row locking, so multiple instances don't double-schedule
+- Redis-backed job queue with workers and bounded retries
+- Check results stored in time-partitioned PostgreSQL tables
+- Incident detection with consecutive-failure thresholds, deduplicated webhook alerts, and at-least-once delivery
+- Multi-user auth (bcrypt, JWT in httpOnly cookies) and Redis rate limiting that fails closed
+- Structured JSON logs, request ID propagation, and a health metrics endpoint
+- Read-only public demo mode
+- The README documents its scope limits, including that DB claim and Redis enqueue are not one atomic transaction
 
-```
-Client (Next.js) → FastAPI → ADK Orchestrator → [StudentIQ | SupervisorIQ | CoordIQ]
-                                  ↓ tool calls
-                            PostgreSQL · Cloudinary · Gemini API
-```
+**Stack:** FastAPI, SQLAlchemy 2.0, PostgreSQL 16, Redis 7, Next.js 14, Docker Compose, Caddy
+**Repo:** [Nexus](https://github.com/arthurmchege/nexus)
 
-**Market:** 700+ TVET institutions across Kenya's 47 counties, hundreds of thousands of students on attachment annually, no direct competitor in this space. Pricing model: KSH 3,000–10,000/month per institution, with an expansion path into Uganda, Tanzania, and Rwanda under the same CBET framework.
+### AttachIQ (MVP complete, full build in progress)
 
-**Status:** 🚧 In active development — full production build in progress.
+An AI-agent platform for industrial attachment assessment at Kenyan TVET institutions under the CBET framework. Workplace supervisors are asked to rate students against competency criteria they have usually never seen, and the rating step is not tied to the evidence the student submitted. AttachIQ adds an agent that walks the supervisor through it.
 
----
+**Working in the MVP**
+- SupervisorIQ, an agent built on Google ADK and Gemini that calls tools against the real PostgreSQL database
+- It pulls the student's profile, pending competency units, and submitted evidence, asks targeted follow-up questions, drafts a score and comments, and writes the assessment once the supervisor confirms
+- Responses streamed over SSE with a manual fetch and ReadableStream, so the JWT stays out of the URL
+- JWT auth with a role gate on the agent endpoint, student evidence upload, and a 7-table schema seeded with demo data
 
-### Copycat Group — Field Service Management Platform ✓ Completed
+**In progress**
+- Reworking the schema and role model for production
+- Institution registration and admin approval flow
 
-A full-stack field operations platform I built solo during my internship at Copycat Group — a multi-tenant job card system for managing photocopier technician dispatch, customer invoicing, and payments. The company had been tracking jobs on paper; I replaced that end-to-end, making all day-to-day implementation and architectural decisions and presenting progress to my supervisor for review and direction.
+**Planned:** StudentIQ, CoordIQ, an orchestrator agent, coordinator and admin portals, cloud file storage, refresh token rotation, an automated test suite, CI/CD, and deployment.
 
-**Stack:** React + Vite · Node.js · Express · PostgreSQL · Docker · Nginx · Python · FastAPI
+A working demo is targeted for KINAP's 6th International Research Conference in October 2026.
 
-- JWT authentication with HTTP-only cookies; role-based dashboards for supervisors and field technicians
-- M-Pesa Daraja API (STK Push) integration — OAuth token generation, payload construction, sandbox-verified via cURL and Postman, transaction state tracked in the database
-- Paystack hosted checkout with webhook signature verification
-- Auto-generated PDF reports per job card for record-keeping and customer handover; email delivery
-- Python/FastAPI monitoring service — WebSocket live updates for Docker container health, API latency, database metrics, M-Pesa transaction states, and user activity, with email alerts and exportable reports
-- Learned Python entirely through building the monitoring service as part of this project
+**Stack:** Next.js, TypeScript, Tailwind CSS, shadcn/ui, FastAPI, async SQLAlchemy, PostgreSQL, Google ADK, Gemini API
+**Repo:** [AttachIQ](https://github.com/arthurmchege/AttachIQ)
 
----
-
-## Tech Stack
-
-**Languages:** TypeScript · JavaScript · Python · SQL  
-**Frontend:** React · Next.js 15 · Tailwind CSS · shadcn/ui · Xyflow  
-**Backend:** Node.js · Express · FastAPI · Pydantic v2 · SQLAlchemy 2.0  
-**AI / Agents:** Anthropic Claude API · Google Agent Development Kit (ADK) · Gemini 2.0 Flash  
-**Databases:** PostgreSQL · Redis · Prisma ORM  
-**Infrastructure:** Docker · Nginx · BullMQ · WebSockets · Cloudinary · GitHub Actions · Railway · Vercel · Google Cloud Run  
-**Integrations:** M-Pesa Daraja API · Paystack · Anthropic Claude API · Google ADK  
-**Tools:** Git · Postman · Linux (Ubuntu)
 
 ---
 
-## What I'm Working Toward
+## Tech
 
-Backend engineering and system architecture. I want to understand systems well enough to design them — how data moves, where failures happen, how services communicate, and how to build something that holds up under real load. That's the level I'm working toward.
+**Languages:** TypeScript, JavaScript, Python, SQL
+**Backend:** Node.js, Express, FastAPI, SQLAlchemy 2.0, Pydantic
+**Frontend:** React, Next.js, Tailwind CSS, shadcn/ui
+**Data and messaging:** PostgreSQL, Redis, BullMQ, WebSockets
+**AI:** Google Agent Development Kit, Gemini API
+**Infrastructure:** Docker, Docker Compose, Nginx, Caddy
+**Integrations:** M-Pesa Daraja API, Paystack
+**Tools:** Git, Postman, Linux
 
 ---
 
-## Reach Me
+## Contact
+**Arthur Mulunda**
 
-[arthurmulunda941@gmail.com](mailto:arthurmulunda941@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](http://www.linkedin.com/in/arthur-chege-b4a216375)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/arthurmchege)
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:arthurmulunda941@gmail.com)
