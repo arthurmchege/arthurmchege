@@ -20,7 +20,7 @@ A full-stack field service management platform, built solo during my internship 
 - I learned Python by building that monitoring service
 
 **Stack:** React, Vite, Tailwind CSS, Node.js, Express, PostgreSQL, Python, FastAPI, Docker, Nginx
-**Repo:** [JobCardSystem](https://github.com/Arthur040419/JobCardSystem)
+**Repo:** [JobCardSystem](https://github.com/arthurmchegeJobCardSystem)
 
 ### Nexus (completed)
 
