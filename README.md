@@ -1,6 +1,6 @@
 # Arthur Mulunda
 
-Software engineer in Nairobi, Kenya. Third-year Computer Science diploma student at The Kiambu National Polytechnic, graduating November 2026. I'm aiming for backend and AI engineering roles.
+Software engineer in Nairobi, Kenya. Third-year Computer Science diploma student graduating November 2027. I'm aiming for backend and AI engineering roles.
 
 I like to understand how a system works before I write code: schema design, data flow, and what happens when something fails.
 
@@ -20,7 +20,7 @@ A full-stack field service management platform, built solo during my internship 
 - I learned Python by building that monitoring service
 
 **Stack:** React, Vite, Tailwind CSS, Node.js, Express, PostgreSQL, Python, FastAPI, Docker, Nginx
-**Repo:** [JobCardSystem](https://github.com/arthurmchegeJobCardSystem)
+**Repo:** [JobCardSystem](https://github.com/arthurmchege/JobCardSystem)
 
 ### Nexus (completed)
 
